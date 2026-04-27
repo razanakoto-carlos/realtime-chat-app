@@ -7,7 +7,7 @@ export interface AuthRequest extends Request {
 }
 
 export async function authMiddleware(
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {

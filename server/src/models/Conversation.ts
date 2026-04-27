@@ -11,3 +11,7 @@ const conversationSchema = new mongoose.Schema({
   avatar: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
 });
+
+const Conversation = mongoose.model("Conversation", conversationSchema);
+
+export default Conversation;

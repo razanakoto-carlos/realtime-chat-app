@@ -57,7 +57,14 @@ export async function authLogin(req: Request, res: Response) {
 
     const token = generateToken(user._id);
 
-    res.status(200).json({ status: "Login successfully", Token: token });
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ status: "Login successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
