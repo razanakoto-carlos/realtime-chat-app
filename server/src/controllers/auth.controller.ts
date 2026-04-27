@@ -33,7 +33,15 @@ export async function authRegister(req: Request, res: Response) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ status: "Register successfully" });
+    res.status(201).json({
+      status: "Register successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -64,7 +72,15 @@ export async function authLogin(req: Request, res: Response) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({ status: "Login successfully" });
+    res.status(200).json({
+      status: "Login successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -79,6 +95,28 @@ export async function authLogout(req: Request, res: Response) {
     });
 
     res.status(200).json({ status: "Logout successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+export async function me(req: Request, res: Response) {
+  try {
+    const findUser = req.user;
+    const user = await User.findById(findUser.user);
+
+    if (!user) {
+      return res.status(400).json({ message: "Not authenticate" });
+    }
+
+    res.status(200).json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

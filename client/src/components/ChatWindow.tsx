@@ -29,7 +29,7 @@ function ChatWindow({ contact, contactIndex, messages, onSend }) {
     <div className="flex-1 flex flex-col bg-gray-50 min-w-0">
       {/* Header conversation */}
       <div className="bg-white border-b border-gray-200 px-5 py-3 flex items-center gap-3">
-        <Avatar initials={contact.initials} index={contactIndex} online={contact.online} />
+        <Avatar online={contact.online} />
         <div>
           <p className="text-sm font-bold text-gray-800">{contact.name}</p>
           <p className="text-xs text-emerald-500">

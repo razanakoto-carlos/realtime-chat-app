@@ -29,7 +29,7 @@ function Sidebar({ contacts, activeId, onSelect }) {
                 : "hover:bg-gray-50"
             }`}
           >
-            <Avatar initials={c.initials} index={i} online={c.online} />
+            <Avatar online={c.online} />
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-center mb-0.5">
                 <span className="text-sm font-semibold text-gray-800 truncate">{c.name}</span>

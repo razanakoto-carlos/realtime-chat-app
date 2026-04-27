@@ -2,10 +2,20 @@ import { useState, type ChangeEvent } from "react";
 import InputField from "../components/InputField";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../api/chat";
+import { useAuthStore } from "../store/useAuthStore";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const { mutate } = useMutation({ mutationFn: login });
+  const { setUser } = useAuthStore();
+  const navigate = useNavigate();
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      setUser(data.user);
+      navigate("/");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,6 +55,12 @@ function Login() {
           <button className="bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold px-5 py-2 rounded transition-colors duration-150">
             LOG IN
           </button>
+          <Link
+            to="/register"
+            className="cursor-pointer text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors duration-150 hover:underline"
+          >
+            Create an account
+          </Link>
         </div>
       </div>
     </form>

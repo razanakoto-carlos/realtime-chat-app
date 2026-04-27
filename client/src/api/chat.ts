@@ -30,3 +30,8 @@ export async function login(data: Authlogin) {
     body: JSON.stringify(data),
   });
 }
+
+export async function authenticate() {
+  return fetchApi(`${BASE_URL}/auth/me`)
+}
+

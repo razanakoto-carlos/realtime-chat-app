@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatWindow from "../components/ChatWindow";
 import EmptyState from "../components/EmptyState";
 import Sidebar from "../components/Sidebar";
+import { useAuthStore } from "../store/useAuthStore";
+import { authenticate } from "../api/chat";
 
 // ── Données de démonstration ─────────────────────────────────────────────────
 const CONTACTS = [
@@ -45,10 +47,30 @@ const CONTACTS = [
 
 const INITIAL_MESSAGES = {
   1: [
-    { id: 1, from: "them", text: "Salut ! Tu es disponible ce matin ?", time: "09:30" },
-    { id: 2, from: "me", text: "Oui, je suis là ! Qu'est-ce qu'il y a ?", time: "09:32" },
-    { id: 3, from: "them", text: "J'ai besoin d'aide sur le projet Laravel.", time: "09:35" },
-    { id: 4, from: "me", text: "Pas de problème, dis-moi tout.", time: "09:37" },
+    {
+      id: 1,
+      from: "them",
+      text: "Salut ! Tu es disponible ce matin ?",
+      time: "09:30",
+    },
+    {
+      id: 2,
+      from: "me",
+      text: "Oui, je suis là ! Qu'est-ce qu'il y a ?",
+      time: "09:32",
+    },
+    {
+      id: 3,
+      from: "them",
+      text: "J'ai besoin d'aide sur le projet Laravel.",
+      time: "09:35",
+    },
+    {
+      id: 4,
+      from: "me",
+      text: "Pas de problème, dis-moi tout.",
+      time: "09:37",
+    },
     { id: 5, from: "them", text: "À tout à l'heure !", time: "09:41" },
   ],
   2: [
@@ -58,11 +80,8 @@ const INITIAL_MESSAGES = {
     { id: 1, from: "me", text: "Je t'ai envoyé les fichiers.", time: "Lun" },
     { id: 2, from: "them", text: "Merci pour ton aide 🙏", time: "Lun" },
   ],
-  4: [
-    { id: 1, from: "them", text: "On se retrouve à 14h ?", time: "Dim" },
-  ],
+  4: [{ id: 1, from: "them", text: "On se retrouve à 14h ?", time: "Dim" }],
 };
-
 
 export default function Chat() {
   const [activeId, setActiveId] = useState(1);
@@ -83,16 +102,17 @@ export default function Chat() {
     }));
   }
 
+
   return (
     // Fond gris global Breeze
     <div className="min-h-screen bg-gray-200 flex items-center justify-center p-6">
       {/* Carte principale */}
       <div className="w-full max-w-4xl h-[600px] bg-white rounded-2xl shadow-lg overflow-hidden flex">
-        <Sidebar
+        {/* <Sidebar
           contacts={CONTACTS}
           activeId={activeId}
           onSelect={setActiveId}
-        />
+        /> */}
         {contact ? (
           <ChatWindow
             contact={contact}

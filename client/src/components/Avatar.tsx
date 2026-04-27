@@ -1,20 +1,18 @@
-function Avatar({ initials, index, size = "md", online = false }) {
-  
-  const AVATAR_COLORS = [
-    "bg-indigo-100 text-indigo-600",
-    "bg-emerald-100 text-emerald-600",
-    "bg-amber-100 text-amber-700",
-    "bg-rose-100 text-rose-600",
-  ];
+import { useAuthStore } from "../store/useAuthStore";
 
-  const color = AVATAR_COLORS[index % AVATAR_COLORS.length];
+function Avatar({ size = "md", online = false }) {
   const sz = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
+  const { user } = useAuthStore();
   return (
     <div className="relative flex-shrink-0">
       <div
-        className={`${sz} ${color} rounded-full flex items-center justify-center font-semibold select-none`}
+        className={`${sz} rounded-full overflow-hidden flex items-center justify-center font-semibold select-none`}
       >
-        {initials}
+        <img
+          src={user?.avatar}
+          alt={user?.name}
+          className="w-full h-full object-cover"
+        />
       </div>
       {online && (
         <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-white rounded-full" />
@@ -23,4 +21,4 @@ function Avatar({ initials, index, size = "md", online = false }) {
   );
 }
 
-export default Avatar
+export default Avatar;

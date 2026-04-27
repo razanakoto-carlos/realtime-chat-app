@@ -2,10 +2,20 @@ import { useState, type ChangeEvent } from "react";
 import InputField from "../components/InputField";
 import { useMutation } from "@tanstack/react-query";
 import { register } from "../api/chat";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
 
 function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  const { mutate } = useMutation({ mutationFn: register });
+  const navigate = useNavigate();
+  const { setUser } = useAuthStore();
+  const { mutate } = useMutation({
+    mutationFn: register,
+    onSuccess: (data) => {
+      setUser(data.user);
+      navigate("/");
+    },
+  });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
