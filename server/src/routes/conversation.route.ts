@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createConversation,
+  createPrivate,
   getMyConversation,
 } from "../controllers/conversation.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
@@ -20,6 +21,7 @@ declare global {
 router.use(authMiddleware);
 
 router.get("/", getMyConversation);
+router.post("/private", createPrivate);
 router.post("/", validateRequest(conversationSchema), createConversation);
 
 export default router;

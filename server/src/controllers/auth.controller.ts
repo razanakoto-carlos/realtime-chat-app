@@ -121,3 +121,19 @@ export async function me(req: Request, res: Response) {
     res.status(500).json({ message: "Server error", error });
   }
 }
+
+export async function getUsers(req: Request, res: Response) {
+  try {
+    const users = await User.find({ _id: { $ne: req.user?.user } }).select(
+      "-password",
+    );
+
+    if (!users) {
+      return res.status(400).json({ message: "The users List is empty" });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}

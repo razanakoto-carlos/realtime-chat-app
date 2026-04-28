@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar from "./Avatar";
-import CheckIcon from "./CheckIcon";
 import SendIcon from "./SendIcon";
+import type { ChatWindowProps } from "../types";
 
-function ChatWindow({ contact, contactIndex, messages, onSend }) {
+
+
+function ChatWindow({ contact, messages, onSend }:ChatWindowProps) {
   const [input, setInput] = useState("");
-  const bottomRef = useRef(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,7 +20,7 @@ function ChatWindow({ contact, contactIndex, messages, onSend }) {
     setInput("");
   }
 
-  function handleKey(e) {
+  function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -26,67 +28,55 @@ function ChatWindow({ contact, contactIndex, messages, onSend }) {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-50 min-w-0">
-      {/* Header conversation */}
-      <div className="bg-white border-b border-gray-200 px-5 py-3 flex items-center gap-3">
-        <Avatar online={contact.online} />
+    <div className="flex-1 flex flex-col bg-[#F0F2F5] min-w-0">
+      <div className="bg-white border-b border-gray-200 px-5 py-3 flex items-center gap-3 shadow-sm">
+        <Avatar />
         <div>
-          <p className="text-sm font-bold text-gray-800">{contact.name}</p>
-          <p className="text-xs text-emerald-500">
-            {contact.online ? "En ligne" : "Hors ligne"}
-          </p>
+          <p className="text-sm font-bold text-[#050505] capitalize">{contact.name}</p>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-2">
-        {messages.map((msg) => (
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+        {messages && messages.map((msg) => (
           <div
-            key={msg.id}
-            className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}
+            key={msg._id}
+            className={`flex ${
+              msg.sender._id === contact._id ? "justify-start" : "justify-end"
+            }`}
           >
             <div
-              className={`max-w-xs lg:max-w-md px-3.5 py-2 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                msg.from === "me"
-                  ? "bg-gray-900 text-white rounded-br-sm"
-                  : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm"
+              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm leading-relaxed ${
+                msg.sender._id === contact._id
+                  ? "bg-[#E4E6EB] text-[#050505] rounded-tl-sm"
+                  : "bg-[#0084FF] text-white rounded-tr-sm"
               }`}
             >
-              {msg.text}
-              <div
-                className={`flex items-center justify-end gap-1 mt-0.5 ${
-                  msg.from === "me" ? "text-gray-400" : "text-gray-400"
-                }`}
-              >
-                <span className="text-xs opacity-60">{msg.time}</span>
-                {msg.from === "me" && <CheckIcon double />}
-              </div>
+              {msg.content}
             </div>
           </div>
         ))}
         <div ref={bottomRef} />
       </div>
-
-      {/* Input */}
-      <div className="bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-3">
+      <div className="bg-white border-t border-gray-200 px-4 py-3 flex items-center gap-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Écrire un message…"
-          className="flex-1 px-4 py-2 text-sm bg-gray-100 rounded-full border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-indigo-300 focus:bg-white transition"
+          placeholder="Aa"
+          className="flex-1 px-4 py-2 text-sm bg-[#F0F2F5] rounded-full border-none outline-none text-[#050505] placeholder-gray-400 focus:ring-2 focus:ring-[#0084FF] transition"
         />
         <button
           onClick={handleSend}
           disabled={!input.trim()}
-          className="w-9 h-9 bg-gray-900 hover:bg-gray-700 disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
+          className="w-9 h-9 bg-[#0084FF] hover:bg-[#0073E6] disabled:bg-gray-300 text-white rounded-full flex items-center justify-center transition-colors flex-shrink-0"
         >
           <SendIcon />
         </button>
       </div>
+
     </div>
   );
 }
 
-export default ChatWindow
+export default ChatWindow;

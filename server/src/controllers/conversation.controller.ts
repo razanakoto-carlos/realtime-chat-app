@@ -25,6 +25,29 @@ export async function createConversation(req: AuthRequest, res: Response) {
   }
 }
 
+export async function createPrivate(req: AuthRequest, res: Response) {
+  try {
+    const { senderId, receiverId } = req.body;
+
+    let conversation = await Conversation.findOne({
+      type: "private",
+      members: { $all: [senderId, receiverId], $size: 2 },
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        name: "private",
+        type: "private",
+        members: [senderId, receiverId],
+      });
+    }
+
+    res.json(conversation);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
 export async function getMyConversation(req: AuthRequest, res: Response) {
   try {
     const conversation = Conversation.find({ members: req.user._id }).populate(

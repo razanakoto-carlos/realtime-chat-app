@@ -4,13 +4,13 @@ import type { AuthRequest } from "../middleware/auth.middleware";
 
 export async function getMessage(req: Request, res: Response) {
   try {
-    const conversationId = req.params;
+    const conversationId = req.params.conversationId;
 
-    const messages = Message.find({ conversation: conversationId })
+    const messages = await Message.find({ conversation: conversationId })
       .populate("sender", "name avatar")
       .sort({ createdAt: 1 });
 
-    res.status(200).json({ messages: messages });
+    res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
