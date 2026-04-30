@@ -1,13 +1,5 @@
 import { useState } from "react";
-
-interface Props {
-  label: string;
-  type: string;
-  autoFocus?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-  name:string
-}
+import type { InputFieldProps } from "../types";
 
 export default function InputField({
   label,
@@ -16,7 +8,7 @@ export default function InputField({
   onChange,
   value,
   name
-}: Props) {
+}: InputFieldProps) {
   const [focused, setFocused] = useState(autoFocus);
 
   return (

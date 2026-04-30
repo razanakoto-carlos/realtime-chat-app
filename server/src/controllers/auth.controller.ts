@@ -2,10 +2,11 @@ import type { Request, Response } from "express";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken";
+import cloudinary from "../config/cloudinary";
 
 export async function authRegister(req: Request, res: Response) {
   try {
-    const { email, password, name, avatar } = req.body;
+    const { email, password, name } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -19,7 +20,6 @@ export async function authRegister(req: Request, res: Response) {
       email,
       password: hashedPassword,
       name,
-      avatar,
     });
 
     const user = await newUser.save();
@@ -133,6 +133,53 @@ export async function getUsers(req: Request, res: Response) {
     }
 
     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+export async function updateUser(req: Request, res: Response) {
+  try {
+    const { password, name } = req.body;
+    const findUser = req.user;
+
+    let photoUrl = null;
+
+    if (req.file) {
+      const result = await new Promise<{ secure_url: string }>(
+        (resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "chat-app" },
+            (error, result) => {
+              if (error) reject(error);
+              else {
+                resolve(result!);
+              }
+            },
+          );
+          stream.end(req.file?.buffer);
+        },
+      );
+      photoUrl = result.secure_url;
+    }
+
+    const updateUser = await User.findByIdAndUpdate(
+      findUser.user,
+      {
+        password,
+        name,
+        ...(photoUrl && { avatar: photoUrl }),
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!updateUser) {
+      return res.status(400).json({ message: "Not authorized" });
+    }
+
+    res.status(200).json(updateUser);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
