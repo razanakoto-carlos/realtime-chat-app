@@ -163,15 +163,17 @@ export async function updateUser(req: Request, res: Response) {
       photoUrl = result.secure_url;
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const updateUser = await User.findByIdAndUpdate(
       findUser.user,
       {
-        password,
+        password: hashedPassword,
         name,
         ...(photoUrl && { avatar: photoUrl }),
       },
       {
-        new: true,
+        returnDocument: "after",
       },
     );
 

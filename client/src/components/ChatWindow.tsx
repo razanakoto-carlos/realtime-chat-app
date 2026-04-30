@@ -3,8 +3,6 @@ import Avatar from "./Avatar";
 import SendIcon from "./SendIcon";
 import type { ChatWindowProps } from "../types";
 
-
-
 function ChatWindow({ contact, messages, onSend }:ChatWindowProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -30,7 +28,7 @@ function ChatWindow({ contact, messages, onSend }:ChatWindowProps) {
   return (
     <div className="flex-1 flex flex-col bg-[#F0F2F5] min-w-0">
       <div className="bg-white border-b border-gray-200 px-5 py-3 flex items-center gap-3 shadow-sm">
-        <Avatar />
+        <Avatar user={contact} />
         <div>
           <p className="text-sm font-bold text-[#050505] capitalize">{contact.name}</p>
         </div>

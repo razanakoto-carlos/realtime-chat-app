@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import GuestRoute from "./components/GuestRoute";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useSocketStore } from "./store/useSocketStore";
+import UpdateUser from "./pages/UserUpdate";
 
 function App() {
   const { checkAuth, user } = useAuthStore();
@@ -45,6 +46,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Chat />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <UpdateUser />
           </ProtectedRoute>
         }
       />

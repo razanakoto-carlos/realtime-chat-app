@@ -1,19 +1,20 @@
 export interface Authregister {
-    name: string,
-    email: string,
-    password:string,
-    avatar?:string,
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
 }
 
 export interface Authlogin {
-    email: string,
-    password:string,
+  email: string;
+  password: string;
 }
 
 export interface ChatWindowProps {
   contact: {
     _id: string;
     name: string;
+    avatar:string;
   };
   messages: {
     _id: string;
@@ -27,6 +28,7 @@ export interface SidebarProps {
   contacts: {
     _id: string;
     name: string;
+    avatar: string;
   }[];
   activeId: string | null;
   onSelect: (contact: { _id: string; name: string }) => void;
@@ -38,5 +40,5 @@ export interface InputFieldProps {
   autoFocus?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
-  name:string
+  name: string;
 }

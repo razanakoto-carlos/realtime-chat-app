@@ -1,4 +1,4 @@
-import type { Authlogin, Authregister } from "../types";
+import type { Authlogin, Authregister} from "../types";
 
 const BASE_URL = "http://localhost:3000/api";
 
@@ -24,6 +24,21 @@ export async function register(data: Authregister) {
   });
 }
 
+export async function updateUser(formData: FormData) {
+  const res = await fetch(`${BASE_URL}/auth/users/update`, {
+    method: "PUT",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "API error");
+  }
+
+  return res.json();
+}
+
 export async function login(data: Authlogin) {
   return fetchApi(`${BASE_URL}/auth/login`, {
     method: "POST",
@@ -31,7 +46,12 @@ export async function login(data: Authlogin) {
   });
 }
 
-export async function authenticate() {
-  return fetchApi(`${BASE_URL}/auth/me`)
+export async function logout() {
+  return fetchApi(`${BASE_URL}/auth/logout`, {
+    method: "POST",
+  });
 }
 
+export async function authenticate() {
+  return fetchApi(`${BASE_URL}/auth/me`);
+}

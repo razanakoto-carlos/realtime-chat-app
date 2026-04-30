@@ -1,8 +1,10 @@
-import { useAuthStore } from "../store/useAuthStore";
+interface AvatarProps {
+  size?: string;
+  user: { avatar: string; name: string };
+}
 
-function Avatar({ size = "md" }) {
+function Avatar({ size = "md", user }: AvatarProps) {
   const sz = size === "sm" ? "w-8 h-8 text-xs" : "w-10 h-10 text-sm";
-  const { user } = useAuthStore();
   return (
     <div className="relative shrink-0">
       <div
@@ -14,9 +16,6 @@ function Avatar({ size = "md" }) {
           className="w-full h-full object-cover"
         />
       </div>
-      {/* {online && (
-        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-white rounded-full" />
-      )} */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ChatWindow from "../components/ChatWindow";
 import EmptyState from "../components/EmptyState";
 import { useAuthStore } from "../store/useAuthStore";
