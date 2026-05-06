@@ -2,14 +2,17 @@ import type { Request, Response } from "express";
 import Message from "../models/Message";
 import type { AuthRequest } from "../middleware/auth.middleware";
 
-export async function getMessage(req: Request, res: Response) {
+export async function getMessage(req: AuthRequest, res: Response) {
   try {
     const conversationId = req.params.conversationId;
-
-    const messages = await Message.find({ conversation: conversationId })
+    const currentUserId = req.user.id.toString();
+    const msgs = await Message.find({ conversation: conversationId })
       .populate("sender", "name avatar")
       .sort({ createdAt: 1 });
-
+    const messages = msgs.map((msg) => ({
+      ...msg.toObject(),
+      isMe: msg.sender._id.toString() === currentUserId,
+    }));
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

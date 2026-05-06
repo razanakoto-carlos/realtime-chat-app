@@ -4,7 +4,9 @@ import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
+router.use(authMiddleware)
+
 router.get("/:conversationId", getMessage);
-router.post("/", deleteMessage);
+router.delete("/", deleteMessage);
 
 export default router;

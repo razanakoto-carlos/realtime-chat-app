@@ -25,19 +25,15 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: corsOptions });
 
 io.on("connection", (socket) => {
-  console.log("✅ Un client connecté :", socket.id);
+  // console.log("✅ Un client connecté :", socket.id);
 
-  // 1. Le frontend rejoint une room = une conversation
   socket.on("joinRoom", (conversationId) => {
     socket.join(conversationId);
-    console.log(`📥 A rejoint la room : ${conversationId}`);
+    // console.log(`📥 A rejoint la room : ${conversationId}`);
   });
 
-  // 2. Le frontend envoie un message
   socket.on("sendMessage", async (data) => {
-    // data = { senderId, conversationId, content }
     try {
-      // Sauvegarde en MongoDB
       const message = await Message.create({
         sender: data.senderId,
         conversation: data.conversationId,
@@ -53,7 +49,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("❌ Client déconnecté :", socket.id);
+    // console.log("❌ Client déconnecté :", socket.id);
   });
 });
 

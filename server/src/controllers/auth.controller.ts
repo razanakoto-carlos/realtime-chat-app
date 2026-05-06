@@ -131,7 +131,7 @@ export async function authLogout(req: Request, res: Response) {
 export async function me(req: Request, res: Response) {
   try {
     const findUser = req.user;
-    const user = await User.findById(findUser.user);
+    const user = await User.findById(findUser.id);
 
     if (!user) {
       return res.status(400).json({ message: "Not authenticate" });
@@ -159,7 +159,7 @@ export async function me(req: Request, res: Response) {
 
 export async function getUsers(req: Request, res: Response) {
   try {
-    const users = await User.find({ _id: { $ne: req.user?.user } }).select(
+    const users = await User.find({ _id: { $ne: req.user?.id } }).select(
       "-password",
     );
 
@@ -208,7 +208,7 @@ export async function updateUser(req: Request, res: Response) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const updateUser = await User.findByIdAndUpdate(
-      findUser.user,
+      findUser.id,
       {
         password: hashedPassword,
         name,

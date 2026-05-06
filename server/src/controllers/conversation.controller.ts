@@ -50,10 +50,11 @@ export async function createPrivate(req: AuthRequest, res: Response) {
 
 export async function getMyConversation(req: AuthRequest, res: Response) {
   try {
-    const conversation = Conversation.find({ members: req.user._id }).populate(
+    const conversation = Conversation.find({ members: req.user.id }).populate(
       "members",
       "name avatar",
     );
+    res.json(conversation)
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

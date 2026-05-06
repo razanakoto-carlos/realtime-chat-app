@@ -1,6 +1,6 @@
 interface AvatarProps {
   size?: string;
-  user: { avatar: string; name: string };
+  user: { avatar?: string; name: string };
 }
 
 function Avatar({ size = "md", user }: AvatarProps) {
