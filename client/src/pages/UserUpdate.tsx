@@ -14,7 +14,7 @@ function UpdateUser() {
   });
   const [avatar, setAvatar] = useState<File | null>(null);
   const navigate = useNavigate();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: updateUser,
     onSuccess: (data) => {
       console.log("Mis à jour !", data);
@@ -29,8 +29,6 @@ function UpdateUser() {
   const handleForm = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
-  // Champ fichier traité séparément
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
       setAvatar(e.target.files[0]);
@@ -75,7 +73,6 @@ function UpdateUser() {
           name="password"
         />
 
-        {/* Champ fichier pour l'avatar */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Avatar
@@ -89,10 +86,9 @@ function UpdateUser() {
                        file:bg-gray-900 file:text-white hover:file:bg-gray-700"
           />
         </div>
-
         <div className="flex items-center justify-between mt-2">
           <button className="bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold px-5 py-2 rounded transition-colors duration-150">
-            UPDATE
+            {isPending ? "Chargement..." : "UPDATE"}
           </button>
         </div>
       </div>

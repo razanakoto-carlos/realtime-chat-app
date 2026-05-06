@@ -1,4 +1,4 @@
-import type { Authlogin, Authregister} from "../types";
+import type { Authlogin, Authregister } from "../types";
 
 const BASE_URL = "http://localhost:3000/api";
 
@@ -10,11 +10,11 @@ async function fetchApi(url: string, options: RequestInit = {}) {
     credentials: "include",
     ...options,
   });
+  const json = await res.json();
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || "API error");
+    throw json;
   }
-  return res.json();
+  return json;
 }
 
 export async function register(data: Authregister) {
@@ -55,3 +55,8 @@ export async function logout() {
 export async function authenticate() {
   return fetchApi(`${BASE_URL}/auth/me`);
 }
+
+export type ApiError = {
+  message: string;
+  errors: Record<string, string[]>;
+};

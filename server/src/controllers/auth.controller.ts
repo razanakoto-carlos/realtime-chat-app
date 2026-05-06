@@ -11,7 +11,12 @@ export async function authRegister(req: Request, res: Response) {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({
+        message: "Validation error",
+        errors: {
+          email: ["Cet email est déjà utilisé"],
+        },
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -54,15 +59,24 @@ export async function authLogin(req: Request, res: Response) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid Emails" });
+      return res.status(400).json({
+        message: "Validation error",
+        errors: {
+          email: ["Email incorrect ou inexistant"],
+        },
+      });
     }
 
     const hasPassword = await bcrypt.compare(password, user.password);
 
     if (!hasPassword) {
-      return res.status(400).json({ message: "Invalid Password" });
+      return res.status(400).json({
+        message: "Validation error",
+        errors: {
+          password: ["Mot de passe incorrect"],
+        },
+      });
     }
-
     const token = generateToken(user._id);
 
     res.cookie("authToken", token, {
@@ -82,7 +96,14 @@ export async function authLogin(req: Request, res: Response) {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({
+      message: "Server error",
+      errors: {
+        server: [
+          "Une erreur interne est survenue, veuillez réessayer plus tard",
+        ],
+      },
+    });
   }
 }
 
@@ -96,7 +117,14 @@ export async function authLogout(req: Request, res: Response) {
 
     res.status(200).json({ status: "Logout successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({
+      message: "Server error",
+      errors: {
+        server: [
+          "Une erreur interne est survenue, veuillez réessayer plus tard",
+        ],
+      },
+    });
   }
 }
 
@@ -118,7 +146,14 @@ export async function me(req: Request, res: Response) {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({
+      message: "Server error",
+      errors: {
+        server: [
+          "Une erreur interne est survenue, veuillez réessayer plus tard",
+        ],
+      },
+    });
   }
 }
 
@@ -134,7 +169,14 @@ export async function getUsers(req: Request, res: Response) {
 
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({
+      message: "Server error",
+      errors: {
+        server: [
+          "Une erreur interne est survenue, veuillez réessayer plus tard",
+        ],
+      },
+    });
   }
 }
 
@@ -183,6 +225,13 @@ export async function updateUser(req: Request, res: Response) {
 
     res.status(200).json(updateUser);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({
+      message: "Server error",
+      errors: {
+        server: [
+          "Une erreur interne est survenue, veuillez réessayer plus tard",
+        ],
+      },
+    });
   }
 }

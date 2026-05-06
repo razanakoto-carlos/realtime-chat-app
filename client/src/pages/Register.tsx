@@ -1,19 +1,24 @@
 import { useState, type ChangeEvent } from "react";
 import InputField from "../components/InputField";
 import { useMutation } from "@tanstack/react-query";
-import { register } from "../api/chat";
+import { register, type ApiError } from "../api/chat";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
+import type { FormErrors } from "../types";
 
 function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [errors, setErrors] = useState<FormErrors>({});
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: register,
     onSuccess: (data) => {
       setUser(data.user);
       navigate("/");
+    },
+    onError: (error: ApiError) => {
+      setErrors(error.errors);
     },
   });
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,6 +49,9 @@ function Register() {
           autoFocus
           name="name"
         />
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+        )}
         <InputField
           value={form.email}
           onChange={handleForm}
@@ -51,6 +59,9 @@ function Register() {
           type="email"
           name="email"
         />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+        )}
         <InputField
           value={form.password}
           onChange={handleForm}
@@ -58,10 +69,13 @@ function Register() {
           type="password"
           name="password"
         />
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+        )}
         {/* <InputField label="Confirm Password" type="password" /> */}
         <div className="flex items-center justify-between mt-2">
           <button className="bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold px-5 py-2 rounded transition-colors duration-150">
-            REGISTER
+            {isPending ? "Chargement..." : "REGISTER"}
           </button>
         </div>
       </div>

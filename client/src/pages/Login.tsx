@@ -1,19 +1,24 @@
 import { useState, type ChangeEvent } from "react";
 import InputField from "../components/InputField";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "../api/chat";
+import { login, type ApiError } from "../api/chat";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
+import type { FormErrors } from "../types";
 
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState<FormErrors>({});
   const { setUser } = useAuthStore();
   const navigate = useNavigate();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       setUser(data.user);
       navigate("/");
+    },
+    onError: (error: ApiError) => {
+      setErrors(error.errors);
     },
   });
 
@@ -44,6 +49,9 @@ function Login() {
           type="email"
           autoFocus
         />
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+        )}
         <InputField
           value={form.password}
           onChange={handleForm}
@@ -51,9 +59,12 @@ function Login() {
           label="Password"
           type="password"
         />
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+        )}
         <div className="flex items-center justify-between">
           <button className="bg-gray-900 hover:bg-gray-700 text-white text-xs font-semibold px-5 py-2 rounded transition-colors duration-150">
-            LOG IN
+            {isPending ? "Chargement..." : "LOG IN"}
           </button>
           <Link
             to="/register"

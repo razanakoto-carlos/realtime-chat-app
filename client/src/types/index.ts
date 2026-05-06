@@ -2,7 +2,7 @@ export interface Authregister {
   name: string;
   email: string;
   password: string;
-  avatar: string;
+  avatar?: string;
 }
 
 export interface Authlogin {
@@ -42,3 +42,9 @@ export interface InputFieldProps {
   value: string;
   name: string;
 }
+
+export type FormErrors = {
+  name?: string[];
+  email?: string[];
+  password?: string[];
+};
